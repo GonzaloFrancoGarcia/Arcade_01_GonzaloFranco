@@ -65,42 +65,13 @@ pip install -r requirements.txt
 
 ## 🛠️ Ejecución
 
-Arranca el servidor
-Abre una terminal nueva, sitúate en server/ y ejecuta:
+1. Arranca el servidor. Abre una terminal nueva, sitúate en server/ y ejecuta:
 ```plaintext
 cd server
 python main.py
 ```
 
-Esto inicializa resultados.db (SQLite) y deja el servidor escuchando en 127.0.0.1:5000.
-
-Lanza el launcher
-Abre otra terminal, vuelve a la raíz y ejecuta:
+2. Lanza el launcher. Abre otra terminal, vuelve a la raíz y ejecuta:
 ```plaintext
 python launcher.py
 ```
-
-Verás un menú con opciones:
-
-Jugar a N‑Reinas
-
-Jugar al Knight’s Tour
-
-Jugar a Torres de Hanói
-
-Ver resultados (elige qué tabla mostrar)
-
-Salir
-
-## 📊 Ver resultados
-Desde el launcher, elige la opción 4) y luego 1–4 para consultar:
-
-1) reinas_results
-
-2) caballo_results
-
-3) hanoi_results
-
-4) Todas
-
-Los datos se muestran directamente en consola con sus columnas y filas.
