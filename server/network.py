@@ -3,7 +3,7 @@ import threading
 import json
 
 from db import init_db, SessionLocal
-from models import ReinasResult, CaballoResult
+from models import ReinasResult, CaballoResult, HanoiResult
 
 class Server:
     def __init__(self, host='127.0.0.1', port=5000):
@@ -54,6 +54,17 @@ class Server:
                 sess.add(resultado)
                 sess.commit()
                 print(f'✅ Guardado Knight’s Tour: inicio={payload["inicio"]}, movimientos={payload["movimientos"]}')
+                conn.sendall(b'ACK')
+
+            elif juego == 'hanoi':
+                resultado = HanoiResult(
+                    discos=payload['discos'],
+                    movimientos=payload['movimientos'],
+                    resuelto=payload['resuelto']
+                )
+                sess.add(resultado)
+                sess.commit()
+                print(f'✅ Guardado Hanói: discos={payload["discos"]}, movimientos={payload["movimientos"]}, resuelto={payload["resuelto"]}')
                 conn.sendall(b'ACK')
 
             else:
