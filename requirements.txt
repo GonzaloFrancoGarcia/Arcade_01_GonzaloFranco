@@ -1,2 +1,2 @@
 pygame>=1.9
-SQLAlchemy
+SQLAlchemy>=1.4
