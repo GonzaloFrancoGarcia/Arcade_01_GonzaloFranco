@@ -41,37 +41,44 @@ Arcade_01_GonzaloFranco/
 │       └── ui.py
 └── docs/
     └── informe.pdf
+```
 
 ## ⚙️ Instalación y dependencias
 
 1. Clona o descarga este repositorio y sitúate en la carpeta raíz:
-   ```bash
-   git clone https://github.com/GonzaloFrancoGarcia/Arcade_01_GonzaloFranco
-   cd Arcade_01_GonzaloFranco
+```plaintext
+git clone https://github.com/GonzaloFrancoGarcia/Arcade_01_GonzaloFranco
+cd Arcade_01_GonzaloFranco
+```
 
 2. Crea y activa un entorno virtual (recomendado):
-
+```plaintext
 python -m venv venv
 source venv/bin/activate   # Linux / macOS
 venv\Scripts\activate      # Windows
+```
 
 3. Instala las dependencias:
-
+```plaintext
 pip install -r requirements.txt
+```
 
 ## 🛠️ Ejecución
 
 Arranca el servidor
 Abre una terminal nueva, sitúate en server/ y ejecuta:
-
+```plaintext
 cd server
 python main.py
+```
 
 Esto inicializa resultados.db (SQLite) y deja el servidor escuchando en 127.0.0.1:5000.
 
 Lanza el launcher
 Abre otra terminal, vuelve a la raíz y ejecuta:
+```plaintext
 python launcher.py
+```
 
 Verás un menú con opciones:
 
