@@ -8,8 +8,6 @@ from datetime import datetime
 import pygame
 from clients.common.network import Client
 
-print("🚀 [DEBUG] Iniciando UI de N‑Reinas...")
-
 def send_result(N, resuelto, pasos):
     payload = {
         'juego': 'nreinas',
@@ -18,7 +16,6 @@ def send_result(N, resuelto, pasos):
         'pasos': pasos,
         'timestamp': datetime.utcnow().isoformat()
     }
-    print(f"🚀 [DEBUG] Hilo enviando resultado: {payload}")
     Client().send(json.dumps(payload))
 
 def check_solution(queens, N):
@@ -32,10 +29,7 @@ def check_solution(queens, N):
     return True
 
 def main():
-    print("🔧 [DEBUG] Entrando a main()")
-    # Leer N desde argumento: python -m clients.nreinas.ui 8
     N = int(sys.argv[1]) if len(sys.argv) > 1 else 8
-    print(f"▶️ [DEBUG] Tamaño N = {N}")
 
     SIZE = 600
     MARGIN = 50
@@ -43,23 +37,21 @@ def main():
     CELL = BOARD // N
 
     pygame.init()
-    print("🎨 [DEBUG] Pygame inicializado")
     screen = pygame.display.set_mode((SIZE, SIZE + 50))
     pygame.display.set_caption(f"N‑Reinas (N={N})")
-
     font = pygame.font.SysFont(None, 24)
-    print("🔤 [DEBUG] Fuente cargada")
 
     queens = set()
     pasos = 0
     solved = False
+    solved_time = None
 
     clock = pygame.time.Clock()
 
     while True:
         for evt in pygame.event.get():
             if evt.type == pygame.QUIT:
-                print("🛑 [DEBUG] Cierre de ventana recibido")
+                pygame.quit()
                 return
             if evt.type == pygame.MOUSEBUTTONDOWN and not solved:
                 x, y = evt.pos
@@ -74,52 +66,40 @@ def main():
 
                     if check_solution(queens, N):
                         solved = True
-                        print(f"✅ [DEBUG] Solución detectada en {pasos} pasos")
+                        solved_time = pygame.time.get_ticks()
                         threading.Thread(
-                            target=send_result,
+                            target=send_result, 
                             args=(N, True, pasos),
                             daemon=True
                         ).start()
 
-        # Dibujar fondo
-        screen.fill((255, 255, 255))
-        # Dibujar tablero
+        # Dibujar tablero y reinas ...
+        screen.fill((255,255,255))
         for r in range(N):
             for c in range(N):
-                rect = pygame.Rect(
-                    MARGIN + c * CELL, MARGIN + r * CELL,
-                    CELL, CELL
-                )
-                color = (200, 200, 200) if (r + c) % 2 == 0 else (100, 100, 100)
+                color = (200,200,200) if (r+c)%2==0 else (100,100,100)
+                rect = pygame.Rect(MARGIN+c*CELL, MARGIN+r*CELL, CELL, CELL)
                 pygame.draw.rect(screen, color, rect)
+        for (r,c) in queens:
+            center = (MARGIN+c*CELL+CELL//2, MARGIN+r*CELL+CELL//2)
+            pygame.draw.circle(screen, (255,0,0), center, CELL//3)
 
-        # Dibujar reinas
-        for (r, c) in queens:
-            center = (
-                MARGIN + c * CELL + CELL // 2,
-                MARGIN + r * CELL + CELL // 2
-            )
-            radius = CELL // 3
-            pygame.draw.circle(screen, (255, 0, 0), center, radius)
-
-        # Texto de pasos
-        text_surf = font.render(f"Pasos: {pasos}", True, (0, 0, 0))
-        screen.blit(text_surf, (10, SIZE))
-
-        # Mensaje de resuelto
+        # Texto pasos
+        screen.blit(font.render(f"Pasos: {pasos}", True, (0,0,0)), (10, SIZE))
+        # Mensaje resuelto
         if solved:
-            msg = font.render("¡Resuelto! Resultado enviado.", True, (0, 128, 0))
-            screen.blit(msg, (MARGIN, SIZE + 10))
+            screen.blit(font.render("¡Resuelto! Enviando resultado...", True, (0,128,0)), (MARGIN, SIZE+10))
+            # Tras 2s cierra
+            if pygame.time.get_ticks() - solved_time > 2000:
+                pygame.quit()
+                return
 
         pygame.display.flip()
-        clock.tick(30)  # limita a 30 FPS
+        clock.tick(30)
 
 if __name__ == '__main__':
     try:
         main()
     except Exception:
-        print("❌ [ERROR] Excepción no controlada:")
         traceback.print_exc()
-    finally:
         pygame.quit()
-        print("🏁 [DEBUG] Pygame finalizado")
